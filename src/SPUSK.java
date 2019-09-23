@@ -1,0 +1,135 @@
+
+import static java.lang.Math.sqrt;
+import static java.lang.StrictMath.abs;
+
+public class SPUSK {
+    double x0[]=new double [2];
+    double e;
+
+
+    SPUSK(double x0[], double e) {
+
+        this.x0 = x0;
+        this.e = e;
+
+
+    }
+    double ft(double x[],double t, double x1[]) {
+
+        return  3*(x[0]-x1[0]*t)*(x[0]-x1[0]*t)+4*(x[1]-x1[1]*t)*(x[1]-x1[1]*t)-2*(x[0]-x1[0]*t)*(x[1]-x1[1]*t)+x[0]-x1[0]*t;
+
+    }
+    double ft2(double x[],double t, double x1[]) {
+        return  x[1]-x1[1]*t;
+
+    }
+    double w[]=new double[2];
+    double f(double x[]) {
+        return 3*x[0]*x[0]+4*x[1]*x[1]-2*x[0]*x[1]+x[0];
+    }
+    double fx1(double x[]) {
+        return 6*x[0] -2*x[1]+1;
+    }
+    double fy1(double x []) {
+        return 8*x[1] -2*x[0];
+    }
+    double fx2(double x,double y) {
+        return 6;
+    }
+    double fy2(double x,double y) {
+        return 8;
+    }
+    double fxy(double x,double y) {
+        return -2;
+    }
+    double dl(double x[])
+    {
+        return sqrt(x[0]*x[0]+x[1]*x[1]);
+    }
+
+    double q[]=new double[2];
+
+    double s[]=new double[2];
+    double xx[][]=new double[2][2];
+    double l;
+    double t;
+
+
+
+
+   private double dih1(double[] x, double t, double[] w) {
+        double r;
+        double ser;
+        int k = 0;
+        double a,b;
+       double x1;
+       double x2;
+        a=-1;
+        b=1;
+        double alp=0.00002;
+        double q1 = 0;
+        e=0.00005;
+
+        while ((b - a) > 2*e) {
+            ser = (a + b) / 2;
+            x1 = (ser - alp/2);
+            x2 = (ser + alp/2);
+
+
+            if (ft(x, x1,w) < ft(x, x2,w))
+                b = x2;
+            if (ft(x, x1,w) > ft(x, x2,w))
+                a = x1;
+            if (ft(x, x1,w) == ft(x, x2,w)){
+                a = x1;
+                b = x2;}
+            k = k + 1;
+        }
+        double q = (a + b) / 2;
+       System.out.println("mint = " +q );
+        return q;
+    }
+
+
+
+    void p() {
+        int k= 0;
+
+         double t = 0;
+        double x[];
+        x=new double [2];
+        double x1[];
+        x1=new double [2];
+        x=x0;
+
+
+
+        do {
+            w[0] = fx1(x0);
+            System.out.println("w0 = " + w[0]);
+            w[1] = fy1(x0);
+            System.out.println("w1 = " + w[1]);
+
+            if (dl(w)<e)  break;
+
+            t=dih1(x0,t,w);
+            x1[0] = x0[0] - (t * w[0]);
+            x1[1] = x0[1] - (t * w[1]);
+
+            if ((abs(x1[0]-x0[0]) <e) & (abs(x1[1]-x0[1]) <e) &  (abs(f(x1)-f(x0)) <e))  break;
+
+
+            x0[0]=x1[0];
+            x0[1]=x1[1];
+            System.out.println("x и y  = " + x0[0]+"  "+x0[1]);
+            System.out.println("Итерация № = " + k);
+            k = k + 1;
+
+
+        }
+            while (k<10) ;
+        System.out.println("Количество итераций = " + k);
+        System.out.println("Точка минимума = " + x0[0]+"  "+x0[1]);
+        System.out.println("Минимум Функции = " + f(x0));
+    }
+}
